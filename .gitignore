@@ -1,3 +1,4 @@
+
 # Created by https://www.toptal.com/developers/gitignore/api/dotnetcore,windows,aspnetcore,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=dotnetcore,windows,aspnetcore,visualstudiocode
 
@@ -329,6 +330,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,windows,aspnetcore,visualstudiocode
 
-.vs
-/.bin/Debug
-/.obj/Debug
+.bin/
+.obj/
