@@ -25,7 +25,7 @@ namespace WebApi.Application.OrderOperations.Commands
             }
 
             return order;
-            
+
         }
     }
 }
