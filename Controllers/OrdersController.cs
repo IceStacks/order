@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.OrderOperations.Commands;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
+using WebApi.Application.OrderOperations.Commands;
 using WebApi.DbOperations;
 using WebApi.Models;
 
@@ -14,12 +17,14 @@ namespace WebApi.Controllers
     [Route("[controller]s")]
     public class OrderController : ControllerBase
     {
-        // private readonly SupplierDbContext _context;
+        private readonly OrdersDbContext _context;
+        private readonly IMapper _mapper;
 
-        // public SupplierController(SupplierDbContext context)
-        // {
-        //     _context = context;
-        // }
+        public OrderController(OrdersDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
 
         // asagida yazdigim db baglantilari duzeltilecek. 
         // DI ile yapmaya calisacagim,  simdilik gecici olarak bu sekilde kullandim.
@@ -29,87 +34,24 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            List<GetOrderViewModel> orders = new List<GetOrderViewModel>();
 
-            connection.Open();
-
-            MySqlCommand cmd = new MySqlCommand("select * from orders;", connection);
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            while (reader.Read())
-            {
-
-                GetOrderViewModel order = new GetOrderViewModel();
-
-                order.Id = Convert.ToInt32(reader["id"]);
-                order.UserId =Convert.ToInt32(reader["user_id"]);
-                order.ItemCount = Convert.ToInt32(reader["item_count"]);
-                order.TotalPrice = float.Parse(reader["total_price"].ToString());
-                order.PaidPrice = float.Parse(reader["paid_price"].ToString());
-                order.DiscountedPrice = float.Parse(reader["discounted_price"].ToString());
-                order.PaidDate = DateTime.Parse(reader["paid_date"].ToString());
-                order.OrderDate = DateTime.Parse (reader["order_date"].ToString());
-                order.Status = Convert.ToString (reader["status"]);
-                order.Notes = Convert.ToString (reader["notes"]);
-
-                orders.Add(order);
-            }
-
-            reader.Close();
-            connection.Close();
-            return Ok(orders);
+            GetOrdersQuery query = new(_context,_mapper);
+            var result = query.Handle();
+            return Ok(result);
         }
+
 
         [HttpGet("{id}")]
         public IActionResult Show(int id) // model ile olmali
+
         {
-            connection.Open();
-
-            MySqlCommand cmd = new MySqlCommand("select * from orders where id = @id", connection);
-            cmd.Parameters.AddWithValue("@id", id);
-
-            MySqlDataReader reader = cmd.ExecuteReader();
-
-            GetOrderDetailViewModel order = new GetOrderDetailViewModel();
-
-            while (reader.Read())
-            {
-                order.Id = Convert.ToInt32(reader["id"]);
-                order.UserId = Convert.ToInt32(reader["user_id"]);
-                order.ItemCount = Convert.ToInt32(reader["item_count"]);
-                order.TotalPrice = float.Parse(reader["total_price"].ToString());
-                order.PaidPrice = float.Parse(reader["paid_price"].ToString());
-                order.DiscountedPrice = float.Parse(reader["discounted_price"].ToString());
-                order.PaidDate = DateTime.Parse(reader["paid_date"].ToString());
-                order.OrderDate = DateTime.Parse(reader["order_date"].ToString());
-                order.Status = Convert.ToString(reader["status"]);
-                order.Notes = Convert.ToString(reader["notes"]);
-
-            }
-
-            reader.Close();
-            connection.Close();
-            return Ok(order);
+            GetOrderDetailQuery query = new GetOrderDetailQuery(_context);
+            return Ok();
         }
 
         [HttpPost]
         public IActionResult Store([FromBody] CreateOrderModel newOrder) // model ile olmali
         {
-            connection.Open();
-            MySqlCommand cmd = new MySqlCommand("insert into orders (user_id, item_count, total_price, paid_price, discounted_price, paid_date, order_date, status, notes) values (@p1,@p2,@p3,@p4,@p5,@p6,@p7, @p8,@p9)", connection);
-            cmd.Parameters.AddWithValue("@p1", newOrder.UserId);
-            cmd.Parameters.AddWithValue("@p2", newOrder.ItemCount);
-            cmd.Parameters.AddWithValue("@p3", newOrder.TotalPrice);
-            cmd.Parameters.AddWithValue("@p4", newOrder.PaidPrice);
-            cmd.Parameters.AddWithValue("@p5", newOrder.DiscountedPrice);
-            cmd.Parameters.AddWithValue("@p6", newOrder.PaidDate);
-            cmd.Parameters.AddWithValue("@p7", newOrder.OrderDate);
-            cmd.Parameters.AddWithValue("@p8", newOrder.Status);
-            cmd.Parameters.AddWithValue("@p9", newOrder.Notes);
-            cmd.ExecuteNonQuery();
-
-            connection.Close();
-
             return Ok();
         }
 

@@ -5,14 +5,9 @@ using WebApi.Models;
 
 namespace WebApi.DbOperations
 {
-    public class OrderDbContext : DbContext
+    public class OrdersDbContext : DbContext
     {
-        protected readonly MySqlConnection _connection;
-
-        public OrderDbContext(MySqlConnection connection)
-        {
-            _connection = connection;
-        }
+        public OrdersDbContext(DbContextOptions<OrdersDbContext> options) : base(options) { }
 
         public DbSet<Order> Orders { get; set; }
 

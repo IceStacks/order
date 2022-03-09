@@ -2,7 +2,7 @@ using System;
 
 namespace WebApi.Models
 {
-    public class GetOrderViewModel
+    public class GetOrdersViewModel
     {
         public int Id { get; set; }
         public int UserId { get; set; }
