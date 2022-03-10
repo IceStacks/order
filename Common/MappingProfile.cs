@@ -8,6 +8,10 @@ namespace WebApi.Common
         public MappingProfile()
         {
             CreateMap<Order,GetOrdersViewModel>();
+             CreateMap<Order, GetOrderDetailViewModel>();
+            CreateMap<CreateOrderModel, Order>();
+            CreateMap<UpdateOrderModel, Order>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => !srcMember.Equals("")));
         }
     }
 }
