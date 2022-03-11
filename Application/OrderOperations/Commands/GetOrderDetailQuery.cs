@@ -11,7 +11,7 @@ namespace WebApi.Application.OrderOperations.Commands
         
         private readonly OrdersDbContext _context;
         
-        public GetOrderDetailQuery(OrdersDbContext context) 
+        public GetOrderDetailQuery(OrdersDbContext context, AutoMapper.IMapper _mapper) 
         {
             _context = context;
         }

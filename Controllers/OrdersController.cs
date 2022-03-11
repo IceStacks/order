@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.OrderOperations.Commands;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using MySqlConnector;
 using WebApi.Application.OrderOperations.Commands;
+using WebApi.Application.OrderOperations.Validators;
 using WebApi.DbOperations;
 using WebApi.Models;
 
@@ -29,8 +24,7 @@ namespace WebApi.Controllers
         // asagida yazdigim db baglantilari duzeltilecek. 
         // DI ile yapmaya calisacagim,  simdilik gecici olarak bu sekilde kullandim.
 
-        MySqlConnection connection = new MySqlConnection("Server=localhost;Database=order_database;Uid=root;Pwd=12345678;");
-
+       
         [HttpGet]
         public IActionResult Index()
         {
@@ -45,7 +39,8 @@ namespace WebApi.Controllers
         public IActionResult Show(int id) // model ile olmali
 
         {
-            GetOrderDetailQuery query = new GetOrderDetailQuery(_context);
+            GetOrderDetailQuery query = new GetOrderDetailQuery(_context, _mapper);
+            GetOrderDetailQueryValidator validator = new GetOrderDetailQueryValidator();
             return Ok();
         }
 
