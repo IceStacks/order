@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using WebApi.DbOperations;
 using WebApi.Models;
+using Utilities;
 
 namespace WebApi.Application.OrderOperations.Commands
 {
@@ -21,13 +22,13 @@ namespace WebApi.Application.OrderOperations.Commands
             _mapper = mapper;
         }
 
-        public void Handle()
+       public IResult Handle()
         {
             var order = _context.Orders.SingleOrDefault();
 
             if (order is not null)
             {
-                throw new InvalidOperationException("Eklenecek sipariş zaten mevcut.");
+                return new ErrorResult("Bu sipariş daha önce kayıt edilmiş.");
             }
 
             order = _mapper.Map<Order>(Model);

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using WebApi.DbOperations;
 using WebApi.Models;
+using Utilities;
 
 namespace WebApi.Application.OrderOperations.Commands
 {
@@ -17,18 +18,21 @@ namespace WebApi.Application.OrderOperations.Commands
             _context = context;
         }
 
-        public void Handle()
+        public IResult Handle()
         {
             Order order = _context.Orders.FirstOrDefault(x => x.Id == OrderId);
 
             if (order is null)
             {
-                throw new InvalidOperationException("Silinecek tedarikçi bulunamadı.");
+                return new ErrorResult("Silinecek sipariş bulunamadı.");
             }
-
-            _context.Orders.Remove(order);
-            _context.SaveChanges();
         }
+
+        _context.Orders.Remove(order);
+            _context.SaveChanges();
+
+            return new SuccessResult("sipariş başarıyla silindi.");
     }
+}
 }
 

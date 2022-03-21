@@ -22,17 +22,19 @@ namespace WebApi.Application.OrderOperations.Commands
             _mapper = mapper;
         }
 
-        public void Handle(object order)
+        public void Handle()
         {
-            Order supplier = _context.Orders.FirstOrDefault(x => x.Id == OrderId);
+            Order order = _context.Orders.FirstOrDefault(x => x.Id == OrderId);
 
             if (order is null)
             {
                 throw new InvalidOperationException("Güncellenecek sipariş bulunamadı.");
             }
 
-            _mapper.Map(Model, supplier);
+            _mapper.Map(Model, order);
             _context.SaveChanges();
+
+            return new SuccessResult("Sipariş başarıyla güncellendi.");
         }
     }
 }

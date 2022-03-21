@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using WebApi.DbOperations;
 using WebApi.Models;
+using Utilities;
 
 namespace WebApi.Application.OrderOperations.Commands
 {
@@ -15,13 +16,13 @@ namespace WebApi.Application.OrderOperations.Commands
         {
             _context = context;
         }
-        public Order Handle()
+        public IResult Handle()
         {
             var order= _context.Orders.Where(x => x.Id == OrderId).SingleOrDefault();
 
             if(order is null)
             {
-                throw new InvalidOperationException("Aranan Sipariş Bulunamadı.");
+                return new ErrorResult("Silinecek sipariş bulunamadı.");
             }
 
             return order;

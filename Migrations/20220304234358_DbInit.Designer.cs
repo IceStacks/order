@@ -20,7 +20,7 @@ namespace WebApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("WebApi.Models.Supplier", b =>
+            modelBuilder.Entity("WebApi.Models.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
