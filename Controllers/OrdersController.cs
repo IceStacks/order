@@ -1,6 +1,9 @@
 using Application.OrderOperations.Commands;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using WebApi.Application.OrderOperations.Commands;
 using WebApi.Application.OrderOperations.Validators;
 using WebApi.DbOperations;
@@ -21,46 +24,112 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
-        // asagida yazdigim db baglantilari duzeltilecek. 
-        // DI ile yapmaya calisacagim,  simdilik gecici olarak bu sekilde kullandim.
+        [HttpPost("migrating")]
+        public IActionResult Migrating([FromBody] string value)
+        {
+            if(value == "migrate")
+            {
+                var migrator = _context.Database.GetService<IMigrator>();
 
-       
+                migrator.Migrate();
+
+                return Ok("Successful");
+            }
+            else {
+                return BadRequest("Invalid value");
+            }
+
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
+            GetOrdersQuery query = new GetOrdersQuery(_context, _mapper);
 
-            GetOrdersQuery query = new(_context,_mapper);
             var result = query.Handle();
-            return Ok(result);
+            
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
-
         [HttpGet("{id}")]
-        public IActionResult Show(int id) // model ile olmali
-
+        public IActionResult Show(int id)
         {
             GetOrderDetailQuery query = new GetOrderDetailQuery(_context, _mapper);
             GetOrderDetailQueryValidator validator = new GetOrderDetailQueryValidator();
-            return Ok();
+
+            query.OrderId = id;
+
+            validator.ValidateAndThrow(query);
+
+            var result = query.Handle();
+
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpPost]
-        public IActionResult Store([FromBody] CreateOrderModel newOrder) // model ile olmali
+        public IActionResult Store([FromBody] CreateOrderModel newSupplier)
         {
-            return Ok();
+            CreateOrderCommand command = new CreateOrderCommand(_context, _mapper);
+            CreateOrderCommandValidator validator = new CreateOrderCommandValidator();
+
+            command.Model = newSupplier;
+
+            validator.ValidateAndThrow(command);
+
+            var result = command.Handle();
+            
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(int id, [FromBody] Order updatedSupplier) // model ile olmali
+        public IActionResult Edit(int id, [FromBody] UpdateOrderModel updatedSupplier)
         {
+            UpdateOrderCommand command = new UpdateOrderCommand(_context, _mapper);
+            UpdateOrderCommandValidator validator = new UpdateOrderCommandValidator();
 
-            return Ok();
+            command.OrderId = id;
+            command.Model = updatedSupplier;
+
+            validator.ValidateAndThrow(command);
+
+            var result = command.Handle();
+
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Destroy(int id)
         {
-            return Ok();
+            DeleteOrderCommand command = new DeleteOrderCommand(_context);
+            DeleteOrderCommandValidator validator = new DeleteOrderCommandValidator();
+
+            command.SupplierId = id;
+
+            validator.ValidateAndThrow(command);
+
+            var result = command.Handle();
+
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }
