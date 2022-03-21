@@ -8,7 +8,7 @@ namespace WebApi.Application.OrderOperations.Commands
 {
     public class DeleteOrderCommand
     {
-        public int SupplierId { get; set; }
+        public int OrderId { get; set; }
 
         private readonly OrdersDbContext _context;
 
@@ -19,7 +19,7 @@ namespace WebApi.Application.OrderOperations.Commands
 
         public void Handle()
         {
-            Order order = _context.Orders.FirstOrDefault(x => x.Id == SupplierId);
+            Order order = _context.Orders.FirstOrDefault(x => x.Id == OrderId);
 
             if (order is null)
             {

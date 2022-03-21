@@ -75,12 +75,12 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Store([FromBody] CreateOrderModel newSupplier)
+        public IActionResult Store([FromBody] CreateOrderModel newOrder)
         {
             CreateOrderCommand command = new CreateOrderCommand(_context, _mapper);
             CreateOrderCommandValidator validator = new CreateOrderCommandValidator();
 
-            command.Model = newSupplier;
+            command.Model = newOrder;
 
             validator.ValidateAndThrow(command);
 
@@ -94,13 +94,13 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(int id, [FromBody] UpdateOrderModel updatedSupplier)
+        public IActionResult Edit(int id, [FromBody] UpdateOrderModel updatedOrder)
         {
             UpdateOrderCommand command = new UpdateOrderCommand(_context, _mapper);
             UpdateOrderCommandValidator validator = new UpdateOrderCommandValidator();
 
             command.OrderId = id;
-            command.Model = updatedSupplier;
+            command.Model = updatedOrder;
 
             validator.ValidateAndThrow(command);
 
@@ -119,7 +119,7 @@ namespace WebApi.Controllers
             DeleteOrderCommand command = new DeleteOrderCommand(_context);
             DeleteOrderCommandValidator validator = new DeleteOrderCommandValidator();
 
-            command.SupplierId = id;
+            command.OrderId = id;
 
             validator.ValidateAndThrow(command);
 
