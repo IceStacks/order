@@ -3,8 +3,8 @@ version: '3.4'
 services:
   app:
     image: order
-    container_name: app
-    restart: always
+    container_name: Order-App
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -23,9 +23,9 @@ services:
 
   database:
     image: "mysql:8.0.28"
-    container_name: database
+    container_name: Order-Database
     command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    restart: unless-stopped
     ports:
       - 33060:3306
     environment:
@@ -37,4 +37,3 @@ services:
 networks:
   order:
     driver: bridge
-    
