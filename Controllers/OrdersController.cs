@@ -41,18 +41,13 @@ namespace WebApi.Controllers
 
         }
 
-        [HttpGet]
+         [HttpGet]
         public IActionResult Index()
         {
-            GetOrdersQuery query = new GetOrdersQuery(_context, _mapper);
 
+            GetOrdersQuery query = new(_context,_mapper);
             var result = query.Handle();
-            
-            if(result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

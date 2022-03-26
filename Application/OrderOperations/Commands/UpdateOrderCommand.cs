@@ -1,6 +1,7 @@
 using AutoMapper;
 using System;
 using System.Linq;
+using Utilities;
 using WebApi.DbOperations;
 using WebApi.Models;
 
@@ -22,7 +23,7 @@ namespace WebApi.Application.OrderOperations.Commands
             _mapper = mapper;
         }
 
-        public void Handle()
+        public SuccessResult Handle()
         {
             Order order = _context.Orders.FirstOrDefault(x => x.Id == OrderId);
 

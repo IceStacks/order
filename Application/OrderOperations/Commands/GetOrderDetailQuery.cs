@@ -25,7 +25,7 @@ namespace WebApi.Application.OrderOperations.Commands
                 return new ErrorResult("Silinecek sipariş bulunamadı.");
             }
 
-            return order;
+            return (IResult)order;
 
         }
     }

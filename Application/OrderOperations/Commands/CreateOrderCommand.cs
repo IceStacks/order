@@ -1,9 +1,9 @@
 using AutoMapper;
 using System;
 using System.Linq;
+using Utilities;
 using WebApi.DbOperations;
 using WebApi.Models;
-using Utilities;
 
 namespace WebApi.Application.OrderOperations.Commands
 {
@@ -22,19 +22,22 @@ namespace WebApi.Application.OrderOperations.Commands
             _mapper = mapper;
         }
 
-       public IResult Handle()
+        public IResult Handle()
         {
-            var order = _context.Orders.SingleOrDefault();
+            var Order = _context.Orders.SingleOrDefault(Order => Order.UserId == Model.UserId);
 
-            if (order is not null)
+            if (Order is not null)
             {
-                return new ErrorResult("Bu sipariş daha önce kayıt edilmiş.");
+                return new ErrorResult("Bu telefon ve mail ile daha önce kayıt edilmiş.");
             }
 
-            order = _mapper.Map<Order>(Model);
+            Order = _mapper.Map<Order>(Model);
 
-            _context.Orders.Add(order);
+            _context.Orders.Add(Order);
             _context.SaveChanges();
+
+            return new SuccessResult("Tedarikçi başarıyla eklendi.");
+
         }
     }
 }
