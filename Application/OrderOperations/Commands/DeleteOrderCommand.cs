@@ -1,6 +1,7 @@
 using AutoMapper;
 using System;
 using System.Linq;
+using Utilities;
 using WebApi.DbOperations;
 using WebApi.Models;
 
@@ -8,7 +9,7 @@ namespace WebApi.Application.OrderOperations.Commands
 {
     public class DeleteOrderCommand
     {
-        public int SupplierId { get; set; }
+        public int OrderId { get; set; }
 
         private readonly OrdersDbContext _context;
 
@@ -17,18 +18,19 @@ namespace WebApi.Application.OrderOperations.Commands
             _context = context;
         }
 
-        public void Handle()
+        public IResult Handle()
         {
-            Order order = _context.Orders.FirstOrDefault(x => x.Id == SupplierId);
+            Order Order = _context.Orders.FirstOrDefault(x => x.Id == OrderId);
 
-            if (order is null)
+            if (Order is null)
             {
-                throw new InvalidOperationException("Silinecek tedarikçi bulunamadı.");
+                return new ErrorResult("Silinecek tedarikçi bulunamadı.");
             }
 
-            _context.Orders.Remove(order);
+            _context.Orders.Remove(Order);
             _context.SaveChanges();
+
+            return new SuccessResult("Tedarikçi başarıyla silindi.");
         }
     }
 }
-
