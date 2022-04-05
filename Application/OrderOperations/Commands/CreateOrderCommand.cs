@@ -4,6 +4,7 @@ using System.Linq;
 using Utilities;
 using WebApi.DbOperations;
 using WebApi.Models;
+using WebApi.Models.WebApi.Models;
 
 namespace WebApi.Application.OrderOperations.Commands
 {
@@ -24,11 +25,11 @@ namespace WebApi.Application.OrderOperations.Commands
 
         public IResult Handle()
         {
-            var Order = _context.Orders.SingleOrDefault(Order => Order.UserId == Model.UserId);
+            var Order = _context.Orders.SingleOrDefault(Order => Order.UserId == Model.UserId );
 
             if (Order is not null)
             {
-                return new ErrorResult("Bu telefon ve mail ile daha önce kayıt edilmiş.");
+                return new ErrorResult("Bu kullanıcıya ait sipariş mevcuttur.");
             }
 
             Order = _mapper.Map<Order>(Model);
@@ -36,7 +37,7 @@ namespace WebApi.Application.OrderOperations.Commands
             _context.Orders.Add(Order);
             _context.SaveChanges();
 
-            return new SuccessResult("Tedarikçi başarıyla eklendi.");
+            return new SuccessResult("Sipariş başarıyla eklendi.");
 
         }
     }

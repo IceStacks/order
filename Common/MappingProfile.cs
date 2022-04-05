@@ -1,5 +1,6 @@
 using AutoMapper;
 using WebApi.Models;
+using WebApi.Models.WebApi.Models;
 
 namespace WebApi.Common
 {
