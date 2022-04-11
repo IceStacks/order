@@ -7,13 +7,13 @@ namespace Extensions
     {
         public static string GetConnectionStringFromEnvironment(this IConfiguration configuration, string name = null)
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
-                string envServer = Environment.GetEnvironmentVariable("DB_HOST"); 
-                string envDatabase = Environment.GetEnvironmentVariable("DB_NAME"); 
-                string envUser = Environment.GetEnvironmentVariable("DB_USER"); 
-                string envPassword = Environment.GetEnvironmentVariable("DB_PASS"); 
-                return "Server="+envServer+";Database="+envDatabase+";Uid="+envUser+";Pwd="+envPassword+";";
+                string envServer = Environment.GetEnvironmentVariable("DB_HOST");
+                string envDatabase = Environment.GetEnvironmentVariable("DB_NAME");
+                string envUser = Environment.GetEnvironmentVariable("DB_USER");
+                string envPassword = Environment.GetEnvironmentVariable("DB_PASS");
+                return "Server=" + envServer + ";Database=" + envDatabase + ";Uid=" + envUser + ";Pwd=" + envPassword + ";";
             }
             else
             {

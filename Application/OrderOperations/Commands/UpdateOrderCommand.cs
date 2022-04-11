@@ -23,13 +23,13 @@ namespace WebApi.Application.OrderOperations.Commands
             _mapper = mapper;
         }
 
-        public SuccessResult Handle()
+        public IResult Handle()
         {
             Order order = _context.Orders.FirstOrDefault(x => x.Id == OrderId);
 
             if (order is null)
             {
-                throw new InvalidOperationException("Güncellenecek sipariş bulunamadı.");
+                return new ErrorResult("Güncellenecek sipariş bulunamadı.");
             }
 
             _mapper.Map(Model, order);

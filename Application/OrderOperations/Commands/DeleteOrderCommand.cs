@@ -1,5 +1,3 @@
-using AutoMapper;
-using System;
 using System.Linq;
 using Utilities;
 using WebApi.DbOperations;
@@ -24,13 +22,13 @@ namespace WebApi.Application.OrderOperations.Commands
 
             if (Order is null)
             {
-                return new ErrorResult("Silinecek tedarikçi bulunamadı.");
+                return new ErrorResult("Silinecek sipariş bulunamadı.");
             }
 
             _context.Orders.Remove(Order);
             _context.SaveChanges();
 
-            return new SuccessResult("Tedarikçi başarıyla silindi.");
+            return new SuccessResult("Sipariş başarıyla silindi.");
         }
     }
 }

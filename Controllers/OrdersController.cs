@@ -8,6 +8,7 @@ using WebApi.Application.OrderOperations.Commands;
 using WebApi.Application.OrderOperations.Validators;
 using WebApi.DbOperations;
 using WebApi.Models;
+using WebApi.Models.WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -25,9 +26,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("migrating")]
-        public IActionResult Migrating([FromBody] string value)
+        public IActionResult Migrating([FromQuery] string value)
         {
-            if(value == "migrate")
+            if(value.Equals("migrate"))
             {
                 var migrator = _context.Database.GetService<IMigrator>();
 
@@ -47,7 +48,12 @@ namespace WebApi.Controllers
 
             GetOrdersQuery query = new(_context,_mapper);
             var result = query.Handle();
-            return Ok(result);
+            if(result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
         }
 
         [HttpGet("{id}")]

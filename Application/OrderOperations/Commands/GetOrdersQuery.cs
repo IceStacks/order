@@ -18,12 +18,12 @@ namespace Application.OrderOperations.Commands
             _mapper = mapper;
         }
 
-        public List<GetOrdersViewModel> Handle() 
+        public IDataResult<List<GetOrdersViewModel>> Handle()
         {
-            var orders=_context.Orders.OrderBy(x => x.Id ).ToList<Order>();
-            var ordersViewModel=_mapper.Map<List<GetOrdersViewModel>>(orders);
-            return ordersViewModel;
+            var orders = _context.Orders.OrderBy(x => x.Id).ToList<Order>();
+            var ordersViewModel = _mapper.Map<List<GetOrdersViewModel>>(orders);
+            return new SuccessDataResult<List<GetOrdersViewModel>>(ordersViewModel,"Sipariþler listelendi.");
         }
-        
     }
 }
+
